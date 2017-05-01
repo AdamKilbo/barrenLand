@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class barrenLand {
 	 * 		{“0 292 399 307”} 
 	 * 		{“48 192 351 207”, “48 392 351 407”, “120 52 135 547”, “260 52 275 547”}
 	 */
-	public void getInput() throws Exception {
+	public void getInput() throws IOException {
 		String input = null;
 		Scanner sc = new Scanner(System.in);
 		
