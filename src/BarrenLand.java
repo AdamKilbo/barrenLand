@@ -1,10 +1,8 @@
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.Set;
 
 public class barrenLand {
 	static int maxX = 400; 						// X bound
@@ -29,7 +27,7 @@ public class barrenLand {
 	 * 		{“0 292 399 307”} 
 	 * 		{“48 192 351 207”, “48 392 351 407”, “120 52 135 547”, “260 52 275 547”}
 	 */
-	public void getInput() {
+	public void getInput() throws Exception {
 		String input = null;
 		Scanner sc = new Scanner(System.in);
 		
@@ -41,7 +39,7 @@ public class barrenLand {
 		}
 		else {
 			System.out.println("ERROR: No input detected. Exiting program...");
-			System.exit(0);
+			System.exit(0); 
 		}
 	}
 	
@@ -66,18 +64,20 @@ public class barrenLand {
 		// spaces after commas will mess with the split and cause errors
 		input = input.replace(", ", ",");
 		
-		System.out.println("input parsed: " + input);
-		
-		String[] splitString = input.split(","); 
-		for (String s: splitString) {
-			
-			String[] splitCoords = s.split(" ");
-			
-			int[] barrenBounds = {Integer.parseInt(splitCoords[0]), Integer.parseInt(splitCoords[1]), 
-					Integer.parseInt(splitCoords[2]), Integer.parseInt(splitCoords[3])};
-			
-			barrenCoordinates.add(barrenBounds);
-			
+		// if handles case where there are zero numbers in input
+		if (input.length() != 0) {
+			// split and add coords to barren queue
+			String[] splitString = input.split(","); 
+			for (String s: splitString) {
+				
+				String[] splitCoords = s.split(" ");
+				
+				int[] barrenBounds = {Integer.parseInt(splitCoords[0]), Integer.parseInt(splitCoords[1]), 
+						Integer.parseInt(splitCoords[2]), Integer.parseInt(splitCoords[3])};
+				
+				barrenCoordinates.add(barrenBounds);
+				
+			}
 		}
 	}
 	
@@ -89,6 +89,7 @@ public class barrenLand {
 	 * Parsed areas will be marked later with an value > 1
 	 */
 	public void makeMap() {
+		// by default, mark all squares as fertile (0)
 		for (int i = 0; i < field.length; i++) {
 			for (int j = 0; j < field[i].length; j++) {
 				field[i][j] = 0;
@@ -98,11 +99,15 @@ public class barrenLand {
 		// add in barren lands into matrix
 		while (!barrenCoordinates.isEmpty()) {
 			int[] bounds = barrenCoordinates.remove();
+			
+			// assign bounds to readable variables
 			int xMin = bounds[0];
 			int xMax = bounds[2];
+			
 			int yMin = bounds[1];
 			int yMax = bounds[3];
 			
+			// mark squares of land that are barren
 			for (int i = xMin; i <= xMax; i++) {
 				for (int j = yMin; j <= yMax; j++) {
 					field[i][j] = 1;
@@ -147,51 +152,62 @@ public class barrenLand {
 			}
 			// search nearby squares for undiscovered pieces of the field
 			else {
-				//System.out.println("Queue size: " + fieldCoordinates.size());
 				int[] coords = fieldCoordinates.remove();
 				int x = coords[0];
 				int y = coords[1];
 				
+				// if undiscovered, add nearby pieces to the queue to be processed
 				if (field[x][y] == 0) {
-					if ((x > 0) && (field[x-1][y] == 0)) {
-						int[] temp = new int[] {x-1, y};
-						fieldCoordinates.add(temp);
-					}
-					if ((x < maxX-1) && (field[x+1][y] == 0)) {
-						int[] temp = new int[] {x+1, y};
-						fieldCoordinates.add(temp);
-					}
-					if ((y > 0) && (field[x][y-1] == 0)) {
-						int[] temp = new int[] {x, y-1};
-						fieldCoordinates.add(temp);
-					}
-					if ((y < maxY-1) && (field[x][y+1] == 0)) {
-						int[] temp = new int[] {x, y+1};
-						fieldCoordinates.add(temp);
-					}
+					addNearbyFields(x, y);
 					
+					// increment field size
 					fieldSize.put(fieldNumber, (fieldSize.get(fieldNumber))+1);
+					
+					// mark current square as searched
 					field[x][y] = fieldNumber;
 					
 				}
 			}
 		}
-		printResult();
+	}
+	
+	/* 
+	 * Helper function. Adds adjacent fields to be searched if the fields are undiscovered (0) 
+	 * and fields are not out of bounds.
+	 */
+	public void addNearbyFields(int x, int y) {
+		if ((x > 0) && (field[x-1][y] == 0)) {
+			int[] temp = new int[] {x-1, y};
+			fieldCoordinates.add(temp);
+		}
+		if ((x < maxX-1) && (field[x+1][y] == 0)) {
+			int[] temp = new int[] {x+1, y};
+			fieldCoordinates.add(temp);
+		}
+		if ((y > 0) && (field[x][y-1] == 0)) {
+			int[] temp = new int[] {x, y-1};
+			fieldCoordinates.add(temp);
+		}
+		if ((y < maxY-1) && (field[x][y+1] == 0)) {
+			int[] temp = new int[] {x, y+1};
+			fieldCoordinates.add(temp);
+		}
 	}
 	
 	/*
-	 * Get all key value pairs from our hash map and list in
-	 * order of smallest -> largest 
-	 * 
-	 * TODO: order output.
+	 * Get all key value pairs from our hash map and list in order of 
+	 * smallest -> largest field sizes.
 	 */
-	public void printResult() {
-		Set<?> set = fieldSize.entrySet();
-		Iterator<?> iterator = set.iterator();
-		while(iterator.hasNext()) {
-		Map.Entry mentry = (Map.Entry)iterator.next();
-			System.out.print("key is: "+ mentry.getKey() + " & Value is: ");
-			System.out.println(mentry.getValue());
+	public String printResult() {
+		String returnValues = "";
+		for (Map.Entry<Integer, Integer> results : MapUtil.sortByValue(fieldSize).entrySet()) {
+			returnValues += results.getValue() + " "; 
 		}
+		
+		// remove trailing whitespace
+		returnValues = returnValues.substring(0, returnValues.length()-1);
+		
+		System.out.println(returnValues);
+		return returnValues;
 	}
 }
