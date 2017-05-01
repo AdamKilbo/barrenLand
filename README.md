@@ -24,4 +24,10 @@ Output all the fertile land area in square meters, sorted from smallest area to 
 
 # How to run
 
-It is the easiest to run this project by loading the project into eclipse and using the testRunner.java file's main function.
+It is the easiest to run this project by loading the project into eclipse and using the testRunner.java file's main function. This will automatically run the two test cases above and print out their respective answers. Then if you wish to input your own coordinates you will be able to do so after the test cases run. 
+
+# Dependencies and outside material used.
+
+This program uses the JUnit framework for testing purposes. You can find out more about it here: http://junit.org/junit4/
+
+I grabbed a function and a test off of Stackoverflow to sort the HashMap that stores the field key/values into a smallest -> largest order, as well as a JUnit test to ensure that it works. You can find the code here: http://stackoverflow.com/a/2581754. The code is also clearly marked with comments in the program proper within the MapUtil.java and testRunner.java files where it is used.
