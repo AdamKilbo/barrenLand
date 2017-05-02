@@ -7,9 +7,8 @@ import org.junit.Test;
 
 public class tester {
 	
-	/* 
-	 * This test was retrieved from StackOverflow, link: http://stackoverflow.com/a/2581754
-	 */
+	 
+	// This test was retrieved from StackOverflow, link: http://stackoverflow.com/a/2581754
 	@Test
     public void testSortByValue()
     {
