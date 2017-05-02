@@ -15,6 +15,7 @@ public class testRunner {
 		barrenLand bl = new barrenLand();
 		
 		try {
+			System.out.println("Please enter your own coordinates: ");
 			bl.getInput();
 		} catch (IOException e) {
 			e.printStackTrace();
