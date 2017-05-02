@@ -46,10 +46,10 @@ public class barrenLand {
 	
 	/* 
 	 * Split string into parts by comma, then by spaces. Remove quotes and curly braces.
-	 * Store pieces as coordinates either in a string/int arrays in an string/int array.
+	 * Store coordinate pieces as int arrays in a linked list.
 	 * 
 	 * Small note: Looks like the example input has weird double quotes. Will need to 
-	 * parse for those as well as double quotes.
+	 * parse for those as well as normal double quotes.
 	 */
 	public void parseInput(String input) {
 		
@@ -83,8 +83,7 @@ public class barrenLand {
 	}
 	
 	/* 
-	 * Generate an int[400][600] map. 
-	 * This will be the reference map. 
+	 * Generate an int[400][600] map, This will be the reference map. 
 	 * Fertile land will be marked with '0'
 	 * Barren land will be marked with '1' 
 	 * Parsed areas will be marked later with an value > 1
